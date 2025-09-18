@@ -1,0 +1,15 @@
+.bg-wallpaper {
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+/* Overlay fade effect */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 0.3; }
+}
+
+.animate-fadeIn {
+  animation: fadeIn 1s ease-in-out forwards;
+}
