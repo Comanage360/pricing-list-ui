@@ -1,0 +1,8 @@
+.bg-dark-mode {
+  background: linear-gradient(to bottom, #000000, #1e40af 50%, #000000 100%);
+  color: #fff;
+}
+.bg-day-mode {
+  background: linear-gradient(to bottom, #ffffff, #6d94ff 50%, #ffffff 100%);
+  color: #1a202c;
+}

@@ -6,10 +6,34 @@
 
 /* Overlay fade effect */
 @keyframes fadeIn {
-  from { opacity: 0; }
+  from { opacity: 0.2; }
   to { opacity: 0.3; }
 }
 
 .animate-fadeIn {
   animation: fadeIn 1s ease-in-out forwards;
 }
+
+.bg-dark-mode {
+  background: linear-gradient(to bottom, #000000, #1e40af 50%, #000000 100%);
+  color: #fff;
+}
+.bg-day-mode {
+  background: linear-gradient(to bottom, #ffffff, #6d94ff 50%, #ffffff 100%);
+  color: #1a202c;
+}
+
+.border-night-mode {
+  color: #fff;
+  border-width: 1px;
+  border-style: solid;
+  border-color: #4e535d;
+}
+
+.border-day-mode {
+  color: #1a202c; 
+  border-width: 1px;
+  border-style: solid;
+  border-color: #e5e7eb;
+}
+

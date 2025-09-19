@@ -1,1 +1,286 @@
-<p>dashboard works!</p>
+<div class="min-h-screen flex flex-col" [ngClass]="isNightMode ? 'bg-dark-mode' : 'bg-day-mode'">
+
+  <header class="sticky top-0 z-50 bg-opacity-70 backdrop-blur-md border-b border-gray-200 shadow-md"
+    [ngClass]="isNightMode ? 'bg-black border-gray-600' : 'bg-white bg-opacity-60 border-gray-300'">
+    <div class="max-w-7xl mx-auto lg:px-1 flex items-center justify-between py-4 relative">
+      <div>
+        <h1 class="text-2xl font-extrabold bg-gradient-to-r from-blue-400 to-purple-500 bg-clip-text text-transparent">
+          Pricing QA
+        </h1>
+        <p [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-700'" class="text-sm">
+          Ask natural questions. Backend:
+          <code [ngClass]="isNightMode ? ['bg-gray-800']: ['bg-white']"
+            class="px-1.5 py-1 rounded text-xs text-blue-400">http://127.0.0.1:5000/ask</code>
+        </p>
+      </div>
+
+      <div class="flex items-center gap-4">
+        <button type="button" (click)="logout()" aria-label="Sign out" class="px-5 py-2 cursor-pointer rounded-lg font-medium shadow-lg transition
+                       bg-gradient-to-r from-red-500 to-red-700 text-white hover:from-red-600 hover:to-red-800">
+          Sign out
+        </button>
+
+        <div class="relative inline-block">
+          <label class="relative inline-flex items-center cursor-pointer">
+            <input type="checkbox" class="sr-only" [checked]="isNightMode" (change)="toggleTheme()">
+            <div class="w-12 h-6 rounded-full transition-colors duration-300 relative"
+              [ngClass]="isNightMode ? 'bg-gray-700' : 'bg-yellow-100'">
+              <span class="absolute left-2 top-1 text-yellow-100 text-xs">☀️</span>
+              <span class="absolute right-2 top-1 text-blue-900 text-xs">🌙</span>
+              <div
+                class="dot absolute left-0.5 top-0.5 w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300"
+                [ngClass]="{'translate-x-6': isNightMode, 'translate-x-0': !isNightMode}">
+              </div>
+            </div>
+          </label>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="flex-1 max-w-7xl w-full mx-auto px-6 lg:px-8 py-8 space-y-8">
+
+    <section class="shadow-xl rounded-2xl p-6 border" [ngClass]="isNightMode
+                        ? 'bg-black bg-opacity-60 border-gray-700 text-gray-200'
+                        : 'bg-white bg-opacity-60 border-gray-300 text-gray-900'">
+      <h2 class="text-lg font-semibold mb-4">Ask a Question</h2>
+      <form [formGroup]="qForm" (ngSubmit)="submit()" class="space-y-4">
+        <textarea formControlName="question" rows="3"
+          placeholder="e.g., Final price for PA-VM-300 quantity 10 on 2025-09-01"
+          class="w-full rounded-xl border focus:ring-2 focus:ring-blue-500 focus:border-blue-500 p-4 shadow-sm resize-none"
+          [ngClass]="isNightMode
+                             ? 'bg-black bg-opacity-80 text-gray-200 border-gray-600 placeholder-gray-500'
+                             : 'bg-white bg-opacity-80 text-gray-900 border-gray-300 placeholder-gray-400'"></textarea>
+        <button type="submit" [disabled]="loading()"
+          class="px-6 py-2.5 rounded-xl font-semibold shadow transition disabled:opacity-50"
+          [ngClass]="isNightMode
+                           ? 'bg-gradient-to-r from-blue-600 to-purple-700 text-white hover:from-blue-700 hover:to-purple-800'
+                           : 'bg-gradient-to-r from-blue-500 to-blue-700 text-white hover:from-blue-600 hover:to-blue-800'">
+          {{ loading() ? 'Asking…' : 'Ask' }}
+        </button>
+      </form>
+
+      <div class="mt-6">
+        <span [ngClass]="isNightMode ? 'text-gray-300' : 'text-gray-700'" class="text-sm font-medium">Quick
+          Samples:</span>
+        <div class="flex flex-wrap gap-2 mt-3">
+          <button type="button" (click)="sample('What is the lowest current price of PAN-CN-X-ELA-BND2-BKLN?')"
+            [ngClass]="isNightMode
+                             ? 'bg-gray-900 text-blue-300 border border-gray-700 hover:bg-gray-800'
+                             : 'bg-gray-100 text-blue-700 border border-gray-300 hover:bg-gray-200'"
+            class="px-4 py-1.5 text-sm rounded-lg transition">
+            Lowest current
+          </button>
+          <button type="button" (click)="sample('List prices and vendors for Prisma Access on 2025-09-01')" [ngClass]="isNightMode
+                             ? 'bg-gray-900 text-blue-300 border border-gray-700 hover:bg-gray-800'
+                             : 'bg-gray-100 text-blue-700 border border-gray-300 hover:bg-gray-200'"
+            class="px-4 py-1.5 text-sm rounded-lg transition">
+            All vendors on date
+          </button>
+          <button type="button" (click)="sample('Final price for PAN-CN-X-ELA-BND2-BKLN quantity 10 on 2025-09-01')"
+            [ngClass]="isNightMode
+                             ? 'bg-gray-900 text-blue-300 border border-gray-700 hover:bg-gray-800'
+                             : 'bg-gray-100 text-blue-700 border border-gray-300 hover:bg-gray-200'"
+            class="px-4 py-1.5 text-sm rounded-lg transition">
+            Final price
+          </button>
+          <button type="button" (click)="sample('What is the highest price of PAN-CN-X-ELA-BND2-BKLN?')" [ngClass]="isNightMode
+                             ? 'bg-gray-900 text-blue-300 border border-gray-700 hover:bg-gray-800'
+                             : 'bg-gray-100 text-blue-700 border border-gray-300 hover:bg-gray-200'"
+            class="px-4 py-1.5 text-sm rounded-lg transition">
+            Pricing history
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section *ngIf="error()" [ngClass]="isNightMode
+                                      ? 'bg-red-900 bg-opacity-70 border-red-700 text-red-300'
+                                      : 'bg-red-100 border-red-300 text-red-700'" class="rounded-xl p-4 shadow border">
+      {{ error() }}
+    </section>
+
+    <section *ngIf="loading()" [ngClass]="isNightMode
+                                        ? 'bg-black bg-opacity-60 text-gray-400'
+                                        : 'bg-white bg-opacity-60 text-gray-700'" class="shadow rounded-xl p-6 italic">
+      Loading…
+    </section>
+
+    <section *ngIf="resp() as r" class="space-y-6">
+      <div *ngIf="isFinalPrice() && finalAnswer() as fa" class="shadow-xl rounded-2xl p-6 border overflow-x-auto"
+        [ngClass]="isNightMode
+                  ? 'bg-black bg-opacity-60 border-gray-700 text-gray-200'
+                  : 'bg-white bg-opacity-60 border-gray-300 text-gray-900'">
+        <h3 class="text-lg font-semibold mb-4 flex items-center gap-2"
+          [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">
+          💰 Final Price
+        </h3>
+        <table class="min-w-full border rounded-lg text-sm"
+          [ngClass]="isNightMode ? 'border-gray-700 text-gray-300' : 'border-gray-300 text-gray-800'">
+          <tbody [ngClass]="isNightMode ? 'divide-gray-700' : 'divide-gray-300'" class="divide-y">
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Product</th>
+              <td class="p-3">{{ fa.product?.partName || '—' }}</td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Vendor</th>
+              <td class="p-3">{{ fa.vendor?.name || '—' }}</td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Region / Program
+              </th>
+              <td class="p-3">{{ r.intent.region_code || '—' }} / {{ r.intent.program_code || '—' }}</td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">As Of</th>
+              <td class="p-3">{{ r.intent.as_of || 'current' }}</td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Quantity</th>
+              <td class="p-3">{{ fa.quantity }}</td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Base Unit</th>
+              <td class="p-3">{{ fa.baseUnitPrice | currency:(fa.finalCurrency || 'USD'):'symbol':'1.0-4' }}</td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Final Unit</th>
+              <td class="p-3 font-semibold" [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">
+                {{ fa.finalUnitPrice | currency:(fa.finalCurrency || 'USD'):'symbol':'1.0-4' }}
+              </td>
+            </tr>
+            <tr>
+              <th class="p-3 text-left" [ngClass]="isNightMode ? 'text-gray-400' : 'text-gray-600'">Total</th>
+              <td class="p-3 font-bold" [ngClass]="isNightMode ? 'text-purple-400' : 'text-purple-600'">
+                {{ fa.total | currency:(fa.finalCurrency || 'USD'):'symbol':'1.0-4' }}
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="isFinalPrice() && discounts().length" class="shadow rounded-2xl p-6 border overflow-x-auto" [ngClass]="isNightMode
+                  ? 'bg-black bg-opacity-60 border-gray-700 text-gray-200'
+                  : 'bg-white bg-opacity-60 border-gray-300 text-gray-900'">
+        <h3 class="text-lg font-semibold mb-4" [ngClass]="isNightMode ? 'text-purple-400' : 'text-purple-600'">🎁
+          Applied Discounts</h3>
+        <table class="min-w-full border text-sm rounded-lg"
+          [ngClass]="isNightMode ? 'border-gray-700 text-gray-300' : 'border-gray-300 text-gray-800'">
+          <thead [ngClass]="isNightMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'">
+            <tr>
+              <th class="p-2 text-left">Name</th>
+              <th class="p-2 text-left">% Off</th>
+              <th class="p-2 text-left">Amount Off</th>
+              <th class="p-2 text-left">Qty Range</th>
+              <th class="p-2 text-left">Stack Mode</th>
+              <th class="p-2 text-left">Priority</th>
+              <th class="p-2 text-left">Valid Window</th>
+            </tr>
+          </thead>
+          <tbody [ngClass]="isNightMode ? 'divide-y divide-gray-700' : 'divide-y divide-gray-300'">
+            <tr *ngFor="let d of discounts(); trackBy: trackByIdx">
+              <td class="p-2">{{ d.name || '—' }}</td>
+              <td class="p-2">{{ d.percentOff ?? '—' }}</td>
+              <td class="p-2">{{ d.amountOff ?? '—' }}</td>
+              <td class="p-2">
+                <ng-container *ngIf="d.minQty || d.maxQty; else anyQty">
+                  {{ d.minQty || 0 }} – {{ d.maxQty || '∞' }}
+                </ng-container>
+                <ng-template #anyQty>any</ng-template>
+              </td>
+              <td class="p-2">{{ d.stackMode || '—' }}</td>
+              <td class="p-2">{{ d.priority ?? '—' }}</td>
+              <td class="p-2">
+                <ng-container *ngIf="d.validFrom">
+                  {{ d.validFrom | date:'yyyy-MM-dd' }} – {{ d.validTo ? (d.validTo | date:'yyyy-MM-dd') : 'open' }}
+                </ng-container>
+                <ng-container *ngIf="!d.validFrom">—</ng-container>
+              </td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div *ngIf="rows().length" class="shadow rounded-2xl p-6 border" [ngClass]="isNightMode
+              ? 'bg-black bg-opacity-60 border-gray-700 text-gray-200'
+              : 'bg-white bg-opacity-60 border-gray-300 text-gray-900'">
+        <h3 class="text-lg font-semibold mb-4" [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">
+          📊 Price List
+        </h3>
+        <div class="max-h-96 overflow-y-auto overflow-x-auto rounded-lg border"
+          [ngClass]="isNightMode ? 'border-gray-700' : 'border-gray-300'">
+          <table class="min-w-full text-sm">
+            <thead [ngClass]="isNightMode ? 'bg-gray-800 text-gray-300' : 'bg-gray-100 text-gray-700'">
+              <tr>
+                <th class="p-2 text-left">Part Name</th>
+                <th class="p-2 text-left">Vendor</th>
+                <th class="p-2 text-left">Unit Price</th>
+                <th class="p-2 text-left">CCY</th>
+                <th class="p-2 text-left">UOM</th>
+                <th class="p-2 text-left">Valid From</th>
+                <th class="p-2 text-left">Price List</th>
+              </tr>
+            </thead>
+            <tbody [ngClass]="isNightMode ? 'divide-y divide-gray-700' : 'divide-y divide-gray-300'">
+              <tr *ngFor="let row of rows(); trackBy: trackByIdx">
+                <td class="p-2">{{ row.product?.partName }}</td>
+                <td class="p-2">{{ row.vendor?.name || '—' }}</td>
+                <td class="p-2">{{ row.unitPrice | currency: row.currencyCode:'symbol':'1.0-4' }}</td>
+                <td class="p-2">{{ row.currencyCode }}</td>
+                <td class="p-2">{{ row.uomCode }}</td>
+                <td class="p-2">{{ row.validFrom | date:'yyyy-MM-dd' }}</td>
+                <td class="p-2">{{ row.priceList?.name || '—' }}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div *ngIf="r.average !== null && r.average !== undefined" class="shadow rounded-2xl p-6 border" [ngClass]="isNightMode
+                  ? 'bg-black bg-opacity-60 border-gray-700 text-gray-200'
+                  : 'bg-white bg-opacity-60 border-gray-300 text-gray-900'">
+        <h3 class="text-lg font-semibold" [ngClass]="isNightMode ? 'text-purple-400' : 'text-purple-600'">📈 Average
+        </h3>
+        <p class="mt-2">{{ r.average }}</p>
+      </div>
+
+      <div *ngIf="r.plan || r.result" class="shadow rounded-2xl p-6 border" [ngClass]="isNightMode
+                  ? 'bg-black bg-opacity-60 border-gray-700 text-gray-200'
+                  : 'bg-white bg-opacity-60 border-gray-300 text-gray-900'">
+        <h3 class="text-lg font-semibold mb-2" [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">🧩 Plan
+          (fallback)</h3>
+        <div [ngClass]="isNightMode ? 'bg-gray-900 text-gray-300' : 'bg-gray-100 text-gray-800'"
+          class="grid md:grid-cols-2 gap-4 text-sm rounded p-4">
+          <pre>{{ r.plan | json }}</pre>
+          <pre>{{ r.result | json }}</pre>
+        </div>
+      </div>
+
+      <details *ngIf="r.answer || r.answers?.length || r.plan || r.result" class="shadow rounded-2xl p-6 border text-sm"
+        [ngClass]="isNightMode
+                      ? 'bg-black bg-opacity-60 border-gray-700 text-gray-300'
+                      : 'bg-white bg-opacity-60 border-gray-300 text-gray-800'">
+        <summary class="cursor-pointer font-medium" [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">🔍 Raw
+          response (debug)</summary>
+        <pre class="mt-2 rounded p-2" [ngClass]="isNightMode ? 'bg-gray-900' : 'bg-gray-100'">{{ r | json }}</pre>
+      </details>
+
+      <div *ngIf="!rows().length && !isFinalPrice() && !r.average && !r.plan && !r.result"
+        class="shadow rounded-2xl p-6 italic" [ngClass]="isNightMode
+                  ? 'bg-black bg-opacity-60 text-gray-400'
+                  : 'bg-white bg-opacity-60 text-gray-700'">
+        No rows to display for this question.
+      </div>
+    </section>
+  </main>
+
+  <footer class="py-4 text-center border-t" [ngClass]="isNightMode
+                     ? 'bg-black bg-opacity-70 border-gray-700 text-gray-400'
+                     : 'bg-white bg-opacity-60 border-gray-300 text-gray-700'">
+    <small>
+      © 2025 Pricing QA •
+      <code [ngClass]="isNightMode ? ['bg-gray-800']: ['bg-white']"
+        class="px-1.5 py-1 rounded text-xs text-blue-400">http://127.0.0.1:5000/ask</code>
+    </small>
+  </footer>
+</div>
