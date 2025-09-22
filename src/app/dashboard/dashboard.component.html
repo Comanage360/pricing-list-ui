@@ -258,12 +258,17 @@
 
       <details *ngIf="r.answer || r.answers?.length || r.plan || r.result" class="shadow rounded-2xl p-6 border text-sm"
         [ngClass]="isNightMode
-                      ? 'bg-black bg-opacity-60 border-gray-700 text-gray-300'
-                      : 'bg-white bg-opacity-60 border-gray-300 text-gray-800'">
-        <summary class="cursor-pointer font-medium" [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">🔍 Raw
-          response (debug)</summary>
-        <pre class="mt-2 rounded p-2" [ngClass]="isNightMode ? 'bg-gray-900' : 'bg-gray-100'">{{ r | json }}</pre>
+                ? 'bg-black bg-opacity-60 border-gray-700 text-gray-300'
+                : 'bg-white bg-opacity-60 border-gray-300 text-gray-800'">
+        <summary class="cursor-pointer font-medium" [ngClass]="isNightMode ? 'text-blue-400' : 'text-blue-600'">
+          🔍 Raw response (debug)
+        </summary>
+        <div class="mt-2 rounded p-2 max-h-96 overflow-auto whitespace-pre-wrap break-words"
+          [ngClass]="isNightMode ? 'bg-gray-900' : 'bg-gray-100'">
+          <pre>{{ r | json }}</pre>
+        </div>
       </details>
+
 
       <div *ngIf="!rows().length && !isFinalPrice() && !r.average && !r.plan && !r.result"
         class="shadow rounded-2xl p-6 italic" [ngClass]="isNightMode
